@@ -12,9 +12,9 @@ import java.util.UUID
 data class User(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: UUID,
+    val id: UUID?,
 
     val email: String,
-    val nome: String,
+    val name: String,
     val password: String
 )
