@@ -5,13 +5,15 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.math.BigInteger
 import java.util.UUID
 
 @Entity
-@Table(name = "users")
+@Table(name = "tb_users")
 data class User(
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID )
     val id: UUID?,
 
     val email: String,
