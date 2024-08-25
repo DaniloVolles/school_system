@@ -8,6 +8,7 @@ import com.danilovolles.schoolsystem.dto.UserOutputDTO
 import com.danilovolles.schoolsystem.entity.User
 import com.danilovolles.schoolsystem.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
@@ -61,6 +62,27 @@ class UserServiceImplementation : UserService {
             throw Exception(e.message)
         }
     }
+
+    override fun getUserById(id: UUID): ResponseEntity<ApiResponseDTO<Any>> {
+        try {
+
+            val user = userRepository
+                .findById(id)
+                .orElseThrow { RuntimeException("User not found in our database") }
+
+            val userOutput = userToUserOutput(user.name, user.email)
+
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, userOutput))
+
+        } catch (e: Exception) {
+            e.stackTrace
+            throw Exception(e.message)
+        }
+    }
+
+    private fun userToUserOutput(name: String, email: String) = UserOutputDTO(name = name, email= email)
 
     private fun verifyUserExists(userDto: UserInputDTO): User? {
         val user = userRepository.findUserByEmail(userDto.email)
