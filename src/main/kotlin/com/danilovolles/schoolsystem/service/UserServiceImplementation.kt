@@ -4,6 +4,7 @@ import ch.qos.logback.core.status.WarnStatus
 import com.danilovolles.schoolsystem.dto.ApiResponseDTO
 import com.danilovolles.schoolsystem.dto.ApiResponseStatus
 import com.danilovolles.schoolsystem.dto.UserInputDTO
+import com.danilovolles.schoolsystem.dto.UserOutputDTO
 import com.danilovolles.schoolsystem.entity.User
 import com.danilovolles.schoolsystem.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,6 +37,25 @@ class UserServiceImplementation : UserService {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "New user created successfully"))
 
+        } catch (e: Exception) {
+            e.stackTrace
+            throw Exception(e.message)
+        }
+    }
+
+    override fun getAllUsers(): ResponseEntity<ApiResponseDTO<Any>> {
+        try {
+            val users: List<User> = userRepository.findAll()
+            val userList: MutableList<UserOutputDTO> = mutableListOf()
+
+            for (user in users) {
+                val userOutput = UserOutputDTO(name = user.name, email = user.email)
+                userList.add(userOutput)
+            }
+
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, userList))
         } catch (e: Exception) {
             e.stackTrace
             throw Exception(e.message)

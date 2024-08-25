@@ -9,5 +9,6 @@ import org.springframework.stereotype.Service
 interface UserService {
 
     fun createUser(newUser: UserInputDTO): ResponseEntity<ApiResponseDTO<Any>>
+    fun getAllUsers(): ResponseEntity<ApiResponseDTO<Any>>
 
 }
