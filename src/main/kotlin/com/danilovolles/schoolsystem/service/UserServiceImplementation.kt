@@ -82,6 +82,26 @@ class UserServiceImplementation : UserService {
         }
     }
 
+    override fun updateUser(userId: UUID, userUpdate: UserInputDTO): ResponseEntity<ApiResponseDTO<Any>> {
+        try {
+            val user = userRepository
+                .findById(userId)
+                .orElseThrow { RuntimeException("User not found in our database") }
+
+            user.name = userUpdate.name
+            user.email = userUpdate.email
+
+            userRepository.save(user)
+
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User updated successfully"))
+        } catch (e: Exception){
+            e.stackTrace
+            throw Exception(e.message)
+        }
+    }
+
     private fun userToUserOutput(name: String, email: String) = UserOutputDTO(name = name, email= email)
 
     private fun verifyUserExists(userDto: UserInputDTO): User? {

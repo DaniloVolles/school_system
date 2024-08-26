@@ -12,5 +12,6 @@ interface UserService {
     fun createUser(newUser: UserInputDTO): ResponseEntity<ApiResponseDTO<Any>>
     fun getAllUsers(): ResponseEntity<ApiResponseDTO<Any>>
     fun getUserById(userId: UUID): ResponseEntity<ApiResponseDTO<Any>>
+    fun updateUser(userId: UUID, userUpdate: UserInputDTO): ResponseEntity<ApiResponseDTO<Any>>
 
 }

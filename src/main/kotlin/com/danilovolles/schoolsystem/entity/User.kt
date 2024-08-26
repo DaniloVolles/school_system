@@ -16,7 +16,7 @@ data class User(
     @GeneratedValue(strategy = GenerationType.UUID )
     val id: UUID?,
 
-    val email: String,
-    val name: String,
-    val password: String
+    var email: String,
+    var name: String,
+    var password: String
 )
