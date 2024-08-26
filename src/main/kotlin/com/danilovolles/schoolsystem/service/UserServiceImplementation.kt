@@ -29,7 +29,7 @@ class UserServiceImplementation : UserService {
                 id = null,
                 name = newUser.name,
                 email = newUser.email,
-                password = UUID.randomUUID().toString()
+                password = UUID.randomUUID().toString(),
             )
 
             userRepository.save(savingUser)
@@ -96,6 +96,25 @@ class UserServiceImplementation : UserService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User updated successfully"))
+        } catch (e: Exception){
+            e.stackTrace
+            throw Exception(e.message)
+        }
+    }
+
+    override fun inactiveUser(userId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
+        try {
+            val user = userRepository
+                .findById(userId)
+                .orElseThrow { RuntimeException("User not found in our database") }
+
+            user.active = false
+
+            userRepository.save(user)
+
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User inactivated successfully"))
         } catch (e: Exception){
             e.stackTrace
             throw Exception(e.message)

@@ -13,5 +13,6 @@ interface UserService {
     fun getAllUsers(): ResponseEntity<ApiResponseDTO<Any>>
     fun getUserById(userId: UUID): ResponseEntity<ApiResponseDTO<Any>>
     fun updateUser(userId: UUID, userUpdate: UserInputDTO): ResponseEntity<ApiResponseDTO<Any>>
+    fun inactiveUser(userId: UUID): ResponseEntity<ApiResponseDTO<Any>>
 
 }

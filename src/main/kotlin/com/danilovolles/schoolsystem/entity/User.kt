@@ -18,5 +18,6 @@ data class User(
 
     var email: String,
     var name: String,
-    var password: String
+    var password: String,
+    var active: Boolean = true
 )

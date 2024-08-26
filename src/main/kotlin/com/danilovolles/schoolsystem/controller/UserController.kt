@@ -35,4 +35,7 @@ class UserController {
         @RequestBody userData: UserInputDTO
     ) = userService.updateUser(userId, userData)
 
+    @PutMapping("/inactive/{userId}")
+    fun inactiveUserById(@Valid @PathVariable userId: UUID) = userService.inactiveUser(userId)
+
 }
