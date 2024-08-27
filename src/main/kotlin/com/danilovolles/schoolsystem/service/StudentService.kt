@@ -11,7 +11,7 @@ interface StudentService {
     fun createStudent(newStudent: StudentInputDTO): ResponseEntity<ApiResponseDTO<Any>>
     fun getAllStudent(): ResponseEntity<ApiResponseDTO<Any>>
     fun getStudentById(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>>
-    fun getStudentBySubject(subject: String): ResponseEntity<ApiResponseDTO<Any>>
+    fun getStudentByClass(schoolClass: String): ResponseEntity<ApiResponseDTO<Any>>
     fun updateStudent(studentId: UUID, studentUpdate: StudentInputDTO): ResponseEntity<ApiResponseDTO<Any>>
     fun inactiveStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>>
 }
