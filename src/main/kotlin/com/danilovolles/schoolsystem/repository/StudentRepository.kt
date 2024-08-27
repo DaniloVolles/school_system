@@ -6,4 +6,5 @@ import java.util.UUID
 
 interface StudentRepository : JpaRepository<Student, UUID> {
     fun findStudentBySchoolClass(schoolClass: String): Student?
+    fun findStudentByName(name: String): Student?
 }

@@ -8,7 +8,7 @@ import java.util.UUID
 data class Student(
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID,
+    val id: UUID?,
 
     var name: String,
     var email: String,
