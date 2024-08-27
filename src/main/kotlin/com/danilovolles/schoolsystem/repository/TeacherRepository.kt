@@ -6,4 +6,5 @@ import java.util.UUID
 
 interface TeacherRepository : JpaRepository<Teacher, UUID> {
     fun findTeacherByEmail(email: String): Teacher?
+    fun findTeacherBySubject(subject: String): Teacher?
 }
