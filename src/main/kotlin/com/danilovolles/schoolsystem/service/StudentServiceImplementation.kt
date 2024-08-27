@@ -156,9 +156,8 @@ class StudentServiceImplementation : StudentService {
         val student = studentRepository.findStudentByName(studentDto.name)
         if (student != null) {
             throw Exception("Student already in our database")
-        } else{
-            return student
         }
+        return null
     }
     
 }

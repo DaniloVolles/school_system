@@ -157,7 +157,7 @@ class TeacherServiceImplementation : TeacherService {
         if (teacher != null) {
             throw Exception("Teacher already in our database")
         }
-        return teacher
+        return null
     }
 
 }

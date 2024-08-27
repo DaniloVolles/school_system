@@ -126,7 +126,7 @@ class UserServiceImplementation : UserService {
         if (user != null) {
             throw Exception("User already in our database")
         }
-        return user
+        return null
     }
 
 }
