@@ -1,2 +1,9 @@
 # School System
 Esse sistema foi desenvolvido na intenção de implementar alguns tópicos mais profundos do Spring
+
+
+# Regras de negócio
+- uma classe só pode ter um professor
+- uma classe pode ter no máximo 30 alunos
+- um aluno pode ter no máximo 10 classes
+- um professor só pode ter quantas classes quiser

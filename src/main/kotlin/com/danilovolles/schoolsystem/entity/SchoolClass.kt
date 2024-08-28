@@ -11,6 +11,7 @@ data class SchoolClass (
 
     var name: String,
     var description: String,
+    var subject: String,
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")

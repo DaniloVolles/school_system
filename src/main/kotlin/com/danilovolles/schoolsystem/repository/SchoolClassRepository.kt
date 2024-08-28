@@ -7,4 +7,6 @@ import java.util.UUID
 interface SchoolClassRepository : JpaRepository<SchoolClass, Long> {
     fun getSchoolClassByStudent(studentId: UUID): SchoolClass?
     fun getSchoolClassByTeacher(teacherId: UUID): SchoolClass?
+    fun getSchoolClassBySubject(subject: String): SchoolClass?
+    fun getSchoolClassByName(name: String): SchoolClass?
 }

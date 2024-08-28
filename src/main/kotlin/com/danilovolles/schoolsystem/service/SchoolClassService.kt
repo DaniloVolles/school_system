@@ -1,7 +1,7 @@
 package com.danilovolles.schoolsystem.service
 
 import com.danilovolles.schoolsystem.dto.ApiResponseDTO
-import com.danilovolles.schoolsystem.dto.ClassInputDTO
+import com.danilovolles.schoolsystem.dto.SchoolClassInputDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
@@ -9,7 +9,7 @@ import kotlin.collections.Set
 
 @Service
 interface SchoolClassService {
-    fun createClass(newClass: ClassInputDTO): ResponseEntity<ApiResponseDTO<Any>>
+    fun createClass(newClass: SchoolClassInputDTO): ResponseEntity<ApiResponseDTO<Any>>
     fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any>>
     fun getClassesByTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
     fun getClassesByStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>>
