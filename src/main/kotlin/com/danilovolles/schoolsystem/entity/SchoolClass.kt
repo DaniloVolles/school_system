@@ -22,7 +22,7 @@ data class SchoolClass (
         joinColumns = [JoinColumn(name = "schoolclass_id")],
         inverseJoinColumns = [JoinColumn(name = "student_id")]
     )
-    var student: Set<Student> = mutableSetOf()
+    var student: Set<Student>? = mutableSetOf()
 
 
 )
