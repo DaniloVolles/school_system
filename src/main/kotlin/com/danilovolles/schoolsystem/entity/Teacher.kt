@@ -14,5 +14,12 @@ data class Teacher(
     var email: String,
     var password: String,
     var subject: String,
-    var active: Boolean
+    var active: Boolean,
+
+    @OneToMany(mappedBy = "teacher")
+    var schoolClasses: Set<SchoolClass> = mutableSetOf(),
+
+    @ManyToMany(mappedBy = "teachers")
+    var students: Set<Student> = mutableSetOf()
+
 )
