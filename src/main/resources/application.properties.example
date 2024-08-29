@@ -4,5 +4,6 @@ spring.datasource.username=USERNAME
 spring.datasource.password=PASSWORD
 
 spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=false
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring.datasource.driver-class-name=org.postgresql.Driver
