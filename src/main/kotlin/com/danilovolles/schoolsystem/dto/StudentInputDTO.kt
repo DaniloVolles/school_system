@@ -9,6 +9,6 @@ data class StudentInputDTO(
     @NotBlank(message = "Email must be provided")
     var email: String,
 
-    @NotBlank(message = "Class must be provided")
-    var schoolClass: String
+//    @NotBlank(message = "Class must be provided")
+//    var schoolClass: String
 )

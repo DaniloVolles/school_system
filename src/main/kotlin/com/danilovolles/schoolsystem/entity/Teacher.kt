@@ -18,8 +18,5 @@ data class Teacher(
 
     @OneToMany(mappedBy = "teacher")
     var schoolClasses: Set<SchoolClass> = mutableSetOf(),
-
-    @ManyToMany(mappedBy = "teachers")
-    var students: Set<Student> = mutableSetOf()
-
+    
 )

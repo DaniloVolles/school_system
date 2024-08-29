@@ -25,7 +25,7 @@ class StudentServiceImplementation : StudentService {
                 name = newStudent.name,
                 email = newStudent.email,
                 password = UUID.randomUUID().toString(),
-                schoolClass = newStudent.schoolClass,
+                schoolClasses = null,
                 active = true,
             )
 
@@ -48,13 +48,11 @@ class StudentServiceImplementation : StudentService {
 
             for (student in students) {
 
-                val studentOutput = StudentOutputDTO(
-                    name = student.name,
-                    schoolClass = student.schoolClass,
-                    active = student.active
-                )
+                val studentOutput = studentToStudentOutput(student)
 
-                studentList.add(studentOutput)
+                if (studentOutput != null) {
+                    studentList.add(studentOutput)
+                }
             }
 
             return ResponseEntity
@@ -112,7 +110,6 @@ class StudentServiceImplementation : StudentService {
 
             student.name = studentUpdate.name
             student.email = studentUpdate.email
-            student.schoolClass = studentUpdate.schoolClass
 
             studentRepository.save(student)
 
@@ -144,12 +141,15 @@ class StudentServiceImplementation : StudentService {
         }
     }
 
-    private fun studentToStudentOutput(student: Student): StudentOutputDTO {
-        return StudentOutputDTO(
-            name = student.name,
-            schoolClass = student.schoolClass,
-            active = student.active
-        )
+    private fun studentToStudentOutput(student: Student): StudentOutputDTO? {
+        return student.id?.let {
+            StudentOutputDTO(
+                id = it,
+                name = student.name,
+                email = student.email,
+                active = student.active,
+            )
+        }
     }
 
     private fun verifyStudentExists(studentDto: StudentInputDTO): Student? {
