@@ -10,9 +10,7 @@ import kotlin.collections.Set
 @Service
 interface SchoolClassService {
     fun createClass(newClass: SchoolClassInputDTO): ResponseEntity<ApiResponseDTO<Any>>
-    fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any>>
-    fun getClassesByTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
-    fun getClassesByStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>>
+    fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any?>>
     fun insertTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
     fun insertStudent(studentsIds: Set<UUID>): ResponseEntity<ApiResponseDTO<Any>>
     fun inactiveClass(classId: UUID): ResponseEntity<ApiResponseDTO<Any>>

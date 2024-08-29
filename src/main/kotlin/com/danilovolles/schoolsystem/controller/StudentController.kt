@@ -23,9 +23,6 @@ class StudentController {
     @GetMapping("/get/{studentId}")
     fun getStudentById(@Valid @PathVariable studentId: UUID) = studentService.getStudentById(studentId)
 
-    @GetMapping("/get/{schoolClass}")
-    fun getStudentByClass(@PathVariable schoolClass: String) = studentService.getStudentByClass(schoolClass)
-
     @PutMapping("/update/{studentId}")
     fun updateStudentById(
         @Valid @PathVariable studentId: UUID,

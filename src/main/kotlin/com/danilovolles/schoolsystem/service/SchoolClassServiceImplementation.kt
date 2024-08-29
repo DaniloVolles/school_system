@@ -40,7 +40,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
         }
     }
 
-    override fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any>> {
+    override fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any?>> {
         try {
 
             val classes: List<SchoolClass> = schoolClassRepository.findAll()
@@ -64,14 +64,6 @@ class SchoolClassServiceImplementation : SchoolClassService {
             e.stackTrace
             throw Exception(e.message)
         }
-    }
-
-    override fun getClassesByTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getClassesByStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
-        TODO("Not yet implemented")
     }
 
     override fun insertTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>> {

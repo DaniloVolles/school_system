@@ -11,5 +11,5 @@ data class TeacherInputDTO (
     var email: String,
 
     @NotBlank(message = "Subject must be provided")
-    var subject: String,
+    var subject: String
 )

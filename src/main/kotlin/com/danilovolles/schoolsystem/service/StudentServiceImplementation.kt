@@ -64,7 +64,7 @@ class StudentServiceImplementation : StudentService {
         }
     }
 
-    override fun getStudentById(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
+    override fun getStudentById(studentId: UUID): ResponseEntity<ApiResponseDTO<Any?>> {
         try {
 
             val student = studentRepository
@@ -82,25 +82,6 @@ class StudentServiceImplementation : StudentService {
             throw Exception(e.message)
         }
     }
-
-    override fun getStudentByClass(schoolClass: String): ResponseEntity<ApiResponseDTO<Any>> {
-        try {
-
-            val student = studentRepository.findStudentBySchoolClass(schoolClass)
-                ?: throw Exception("Student not found in our database")
-
-            val studentOutput = studentToStudentOutput(student)
-
-            return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, studentOutput))
-
-        } catch (e: Exception) {
-            e.stackTrace
-            throw Exception(e.message)
-        }
-    }
-
 
     override fun updateStudent(studentId: UUID, studentUpdate: StudentInputDTO): ResponseEntity<ApiResponseDTO<Any>> {
         try {
