@@ -18,11 +18,4 @@ data class Student(
     @ManyToMany(mappedBy = "students")
     var schoolClasses: Set<SchoolClass>? = mutableSetOf(),
 
-//    @ManyToMany
-//    @JoinTable(
-//        name = "tb_student_teacher",
-//        joinColumns = [JoinColumn(name = "student_id")],
-//        inverseJoinColumns = [JoinColumn(name = "teacher_id")]
-//    )
-//    var teachers: Set<Teacher> = mutableSetOf()
 )
