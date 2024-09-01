@@ -2,8 +2,10 @@ package com.danilovolles.schoolsystem.service
 
 import com.danilovolles.schoolsystem.dto.*
 import com.danilovolles.schoolsystem.entity.SchoolClass
+import com.danilovolles.schoolsystem.entity.Student
 import com.danilovolles.schoolsystem.entity.Teacher
 import com.danilovolles.schoolsystem.repository.SchoolClassRepository
+import com.danilovolles.schoolsystem.repository.StudentRepository
 import com.danilovolles.schoolsystem.repository.TeacherRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -16,6 +18,9 @@ import kotlin.math.E
 class SchoolClassServiceImplementation : SchoolClassService {
 
     @Autowired
+    private lateinit var studentRepository: StudentRepository
+
+    @Autowired
     private lateinit var teacherRepository: TeacherRepository
 
     @Autowired
@@ -26,13 +31,15 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
             this.verifyIfSchoolClassExists(newClass)
             val teacher = findTeacherById(newClass.teacherId)
+            val students = findStudentsByIdSet(newClass.students)
 
             val savingClass = SchoolClass(
                 id = null,
                 name = newClass.name,
                 subject = newClass.subject,
                 description = newClass.description,
-                teacher = teacher
+                teacher = teacher,
+                students = students
             )
 
             schoolClassRepository.save(savingClass)
@@ -98,7 +105,11 @@ class SchoolClassServiceImplementation : SchoolClassService {
     private fun findTeacherById(teacherId: UUID): Teacher? {
         return teacherRepository
             .findById(teacherId)
-            .orElseThrow{ Exception("Teacher not found") }
+            .orElseThrow { Exception("Teacher not found") }
+    }
+
+    private fun findStudentsByIdSet(studentsIds: Set<UUID>): Set<Student> {
+        return studentRepository.findAllById(studentsIds).toSet()
     }
 
 
