@@ -1,7 +1,7 @@
 package com.danilovolles.schoolsystem.dto
 
-import com.danilovolles.schoolsystem.entity.Teacher
 import jakarta.validation.constraints.NotBlank
+import java.util.UUID
 
 data class SchoolClassInputDTO(
 
@@ -14,5 +14,5 @@ data class SchoolClassInputDTO(
     @NotBlank(message = "Subject must be provided")
     var subject: String,
 
-    var teacher: Teacher?
+    var teacherId: UUID
 )

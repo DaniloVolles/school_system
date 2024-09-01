@@ -2,7 +2,9 @@ package com.danilovolles.schoolsystem.service
 
 import com.danilovolles.schoolsystem.dto.*
 import com.danilovolles.schoolsystem.entity.SchoolClass
+import com.danilovolles.schoolsystem.entity.Teacher
 import com.danilovolles.schoolsystem.repository.SchoolClassRepository
+import com.danilovolles.schoolsystem.repository.TeacherRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,18 +16,23 @@ import kotlin.math.E
 class SchoolClassServiceImplementation : SchoolClassService {
 
     @Autowired
+    private lateinit var teacherRepository: TeacherRepository
+
+    @Autowired
     private lateinit var schoolClassRepository: SchoolClassRepository
+
     override fun createClass(newClass: SchoolClassInputDTO): ResponseEntity<ApiResponseDTO<Any>> {
         try {
 
             this.verifyIfSchoolClassExists(newClass)
+            val teacher = findTeacherById(newClass.teacherId)
 
             val savingClass = SchoolClass(
                 id = null,
                 name = newClass.name,
                 subject = newClass.subject,
                 description = newClass.description,
-                teacher = newClass.teacher
+                teacher = teacher
             )
 
             schoolClassRepository.save(savingClass)
@@ -81,10 +88,17 @@ class SchoolClassServiceImplementation : SchoolClassService {
     private fun verifyIfSchoolClassExists(schoolClass: SchoolClassInputDTO): SchoolClass? {
         val bySubject = schoolClassRepository.getSchoolClassBySubject(schoolClass.subject)
         val byName = schoolClassRepository.getSchoolClassByName(schoolClass.name)
-        if (bySubject == null && byName == null) {
+
+        if (bySubject != null && byName != null) {
             throw Exception("SchoolClass already in our database")
         }
         return null
+    }
+
+    private fun findTeacherById(teacherId: UUID): Teacher? {
+        return teacherRepository
+            .findById(teacherId)
+            .orElseThrow{ Exception("Teacher not found") }
     }
 
 
