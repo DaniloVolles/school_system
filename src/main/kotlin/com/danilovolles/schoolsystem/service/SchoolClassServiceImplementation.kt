@@ -99,6 +99,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
         if (bySubject != null && byName != null) {
             throw Exception("SchoolClass already in our database")
         }
+        
         return null
     }
 
@@ -108,7 +109,10 @@ class SchoolClassServiceImplementation : SchoolClassService {
             .orElseThrow { Exception("Teacher not found") }
     }
 
-    private fun findStudentsByIdSet(studentsIds: Set<UUID>): Set<Student> {
+    private fun findStudentsByIdSet(studentsIds: Set<UUID>?): Set<Student> {
+        if (studentsIds == null) {
+            throw Exception("student set is null")
+        }
         return studentRepository.findAllById(studentsIds).toSet()
     }
 

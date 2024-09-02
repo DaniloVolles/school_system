@@ -14,6 +14,8 @@ data class SchoolClassInputDTO(
     @NotBlank(message = "Subject must be provided")
     var subject: String,
 
+    @NotBlank(message = "Teacher must be provided")
     var teacherId: UUID,
-    var students: Set<UUID>
+
+    var students: Set<UUID>?
 )
