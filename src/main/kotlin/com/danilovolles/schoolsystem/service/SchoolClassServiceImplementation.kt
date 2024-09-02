@@ -81,12 +81,25 @@ class SchoolClassServiceImplementation : SchoolClassService {
         }
     }
 
-    override fun insertTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
-        TODO("Not yet implemented")
-    }
+    override fun insertStudent(studentsIds: InsertStudentSetInClassDTO, classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
+        try {
+            val schoolClass = schoolClassRepository
+                .getSchoolClassById(classId) ?: throw Exception("Class not found")
 
-    override fun insertStudent(studentsIds: Set<UUID>): ResponseEntity<ApiResponseDTO<Any>> {
-        TODO("Not yet implemented")
+            val students = studentRepository.findAllById(studentsIds.students)
+
+            schoolClass.students?.addAll(students)
+
+            schoolClassRepository.save(schoolClass)
+
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Students added successfully"))
+
+        } catch (e: Exception) {
+            e.stackTrace
+            throw Exception(e.message)
+        }
     }
 
     override fun inactiveClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
@@ -125,11 +138,11 @@ class SchoolClassServiceImplementation : SchoolClassService {
             .orElseThrow { Exception("Teacher not found") }
     }
 
-    private fun findStudentsByIdSet(studentsIds: Set<UUID>?): Set<Student> {
+    private fun findStudentsByIdSet(studentsIds: Set<UUID>?): MutableSet<Student> {
         if (studentsIds == null) {
             throw Exception("student set is null")
         }
-        return studentRepository.findAllById(studentsIds).toSet()
+        return studentRepository.findAllById(studentsIds).toMutableSet()
     }
 
 
