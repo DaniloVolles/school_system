@@ -33,6 +33,8 @@ class SchoolClassServiceImplementation : SchoolClassService {
             val teacher = findTeacherById(newClass.teacherId)
             val students = findStudentsByIdSet(newClass.students)
 
+            this.checkNumberOfStudents(students)
+
             val savingClass = SchoolClass(
                 id = null,
                 name = newClass.name,
@@ -86,9 +88,15 @@ class SchoolClassServiceImplementation : SchoolClassService {
             val schoolClass = schoolClassRepository
                 .getSchoolClassById(classId) ?: throw Exception("Class not found")
 
-            val students = studentRepository.findAllById(studentsIds.students)
+            val students = studentRepository.findAllById(studentsIds.students).toMutableSet()
 
-            schoolClass.students?.addAll(students)
+            val updatedStudents =  schoolClass.students?.let {
+                val combinedStudents = it + students
+                checkNumberOfStudents(combinedStudents)
+                combinedStudents.toMutableSet()
+            } ?: students
+
+            schoolClass.students = updatedStudents
 
             schoolClassRepository.save(schoolClass)
 
@@ -145,5 +153,10 @@ class SchoolClassServiceImplementation : SchoolClassService {
         return studentRepository.findAllById(studentsIds).toMutableSet()
     }
 
+    private fun checkNumberOfStudents(students: Set<Student>) {
+        if (students.count() > 10) {
+            throw Exception("Classes must not have more than 30 students")
+        }
+    }
 
 }
