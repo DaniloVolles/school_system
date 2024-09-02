@@ -13,6 +13,7 @@ data class SchoolClass (
     var name: String,
     var description: String,
     var subject: String,
+    var active: Boolean,
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")

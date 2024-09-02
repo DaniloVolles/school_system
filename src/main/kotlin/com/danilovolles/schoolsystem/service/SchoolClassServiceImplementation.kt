@@ -39,7 +39,8 @@ class SchoolClassServiceImplementation : SchoolClassService {
                 subject = newClass.subject,
                 description = newClass.description,
                 teacher = teacher,
-                students = students
+                students = students,
+                active = true
             )
 
             schoolClassRepository.save(savingClass)
@@ -88,8 +89,23 @@ class SchoolClassServiceImplementation : SchoolClassService {
         TODO("Not yet implemented")
     }
 
-    override fun inactiveClass(classId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
-        TODO("Not yet implemented")
+    override fun inactiveClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
+        try {
+            val schoolClass = schoolClassRepository
+                .findById(classId)
+                .orElseThrow { Exception("Class not found with this ID") }
+
+            schoolClass.active = false
+
+            schoolClassRepository.save(schoolClass)
+
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Class inactivated successfully"))
+        } catch (e: Exception) {
+            e.stackTrace
+            throw Exception(e.message)
+        }
     }
 
     private fun verifyIfSchoolClassExists(schoolClass: SchoolClassInputDTO): SchoolClass? {
@@ -99,7 +115,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
         if (bySubject != null && byName != null) {
             throw Exception("SchoolClass already in our database")
         }
-        
+
         return null
     }
 

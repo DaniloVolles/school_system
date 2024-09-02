@@ -13,5 +13,5 @@ interface SchoolClassService {
     fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any?>>
     fun insertTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
     fun insertStudent(studentsIds: Set<UUID>): ResponseEntity<ApiResponseDTO<Any>>
-    fun inactiveClass(classId: UUID): ResponseEntity<ApiResponseDTO<Any>>
+    fun inactiveClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>>
 }
