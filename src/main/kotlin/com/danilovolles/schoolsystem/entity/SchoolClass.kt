@@ -19,12 +19,12 @@ data class SchoolClass (
     @JoinColumn(name = "teacher_id")
     var teacher: Teacher?,
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "tb_student_schoolclass",
         joinColumns = [JoinColumn(name = "schoolclass_id")],
         inverseJoinColumns = [JoinColumn(name = "student_id")]
     )
-    var students: MutableSet<Student>? = mutableSetOf(),
+    var students: MutableSet<Student>? = mutableSetOf()
 
 )

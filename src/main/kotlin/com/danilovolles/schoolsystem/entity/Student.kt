@@ -1,6 +1,8 @@
 package com.danilovolles.schoolsystem.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.util.UUID
 
 @Entity
@@ -15,7 +17,7 @@ data class Student(
     var password: String,
     var active: Boolean,
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
     var schoolClasses: Set<SchoolClass>? = mutableSetOf(),
 
 )

@@ -7,12 +7,12 @@ import com.danilovolles.schoolsystem.entity.Teacher
 import com.danilovolles.schoolsystem.repository.SchoolClassRepository
 import com.danilovolles.schoolsystem.repository.StudentRepository
 import com.danilovolles.schoolsystem.repository.TeacherRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.math.E
 
 @Component
 class SchoolClassServiceImplementation : SchoolClassService {
@@ -83,20 +83,23 @@ class SchoolClassServiceImplementation : SchoolClassService {
         }
     }
 
+    @Transactional
     override fun insertStudent(studentsIds: InsertStudentSetInClassDTO, classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
         try {
-            val schoolClass = schoolClassRepository
-                .getSchoolClassById(classId) ?: throw Exception("Class not found")
+            val schoolClass = schoolClassRepository.getSchoolClassById(classId) ?: throw Exception("Class not found")
 
-            val students = studentRepository.findAllById(studentsIds.students).toMutableSet()
+//            val currentStudents = schoolClass.students ?: mutableSetOf()
+            val currentStudentsNumber = schoolClass.students?.size ?: 0
 
-            val updatedStudents =  schoolClass.students?.let {
-                val combinedStudents = it + students
-                checkNumberOfStudents(combinedStudents)
-                combinedStudents.toMutableSet()
-            } ?: students
+            val currentStudentsOther = this.findStudentsBySchoolClass(classId)
+            val studentsToAdd = studentRepository.findAllById(studentsIds.students).toSet()
 
-            schoolClass.students = updatedStudents
+            val totalStudentCount = currentStudentsNumber + studentsToAdd.size
+
+            if (totalStudentCount > 10) throw Exception("Student count mustn't exceed 10 per class")
+
+            currentStudentsOther?.addAll(studentsToAdd)
+            schoolClass.students = currentStudentsOther
 
             schoolClassRepository.save(schoolClass)
 
@@ -158,5 +161,12 @@ class SchoolClassServiceImplementation : SchoolClassService {
             throw Exception("Classes must not have more than 30 students")
         }
     }
+
+    private fun findStudentsBySchoolClass(schoolClassId: Long): MutableSet<Student>? {
+        val schoolClass = schoolClassRepository.getSchoolClassById(schoolClassId) ?: throw Exception("Class not found")
+        return schoolClass.students
+    }
+
+
 
 }
