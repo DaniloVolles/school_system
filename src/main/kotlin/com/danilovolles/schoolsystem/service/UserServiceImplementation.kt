@@ -100,7 +100,7 @@ class UserServiceImplementation : UserService {
         }
     }
 
-    override fun inactiveUser(userId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
+    override fun deactivateUser(userId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
         try {
             val user = userRepository
                 .findById(userId)

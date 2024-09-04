@@ -12,5 +12,5 @@ interface StudentService {
     fun getAllStudent(): ResponseEntity<ApiResponseDTO<Any>>
     fun getStudentById(studentId: UUID): ResponseEntity<ApiResponseDTO<Any?>>
     fun updateStudent(studentId: UUID, studentUpdate: StudentInputDTO): ResponseEntity<ApiResponseDTO<Any>>
-    fun inactiveStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>>
+    fun deactivateStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>>
 }

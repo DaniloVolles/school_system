@@ -103,7 +103,7 @@ class StudentServiceImplementation : StudentService {
         }
     }
 
-    override fun inactiveStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
+    override fun deactivateStudent(studentId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
         try {
 
             val student = studentRepository

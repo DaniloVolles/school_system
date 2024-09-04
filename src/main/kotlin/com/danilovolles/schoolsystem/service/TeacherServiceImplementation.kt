@@ -27,6 +27,7 @@ class TeacherServiceImplementation : TeacherService {
                 password = UUID.randomUUID().toString(),
                 subject = newTeacher.subject,
                 active = true,
+                schoolClasses = null,
             )
 
             teacherRepository.save(savingTeacher)
@@ -124,7 +125,7 @@ class TeacherServiceImplementation : TeacherService {
         }
     }
 
-    override fun inactiveTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
+    override fun deactivateTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>> {
         try {
 
             val teacher = teacherRepository

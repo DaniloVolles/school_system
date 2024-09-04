@@ -13,5 +13,5 @@ interface TeacherService {
     fun getTeacherById(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
     fun getTeacherBySubject(subject: String): ResponseEntity<ApiResponseDTO<Any>>
     fun updateTeacher(teacherId: UUID, teacherUpdate: TeacherInputDTO): ResponseEntity<ApiResponseDTO<Any>>
-    fun inactiveTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
+    fun deactivateTeacher(teacherId: UUID): ResponseEntity<ApiResponseDTO<Any>>
 }
