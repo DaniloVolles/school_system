@@ -9,6 +9,7 @@ import com.danilovolles.schoolsystem.repository.StudentRepository
 import com.danilovolles.schoolsystem.repository.TeacherRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
@@ -34,6 +35,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
             val students = findStudentsByIdSet(newClass.students)
 
             this.checkNumberOfStudents(students)
+            this.checkTeacherSubjectFitsClassSubject(newClass)
 
             val savingClass = SchoolClass(
                 id = null,
@@ -157,7 +159,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
     private fun checkNumberOfStudents(students: Set<Student>) {
         if (students.count() > 10) {
-            throw Exception("Classes must not have more than 30 students")
+            throw Exception("Classes must not have more than 10 students")
         }
     }
 
@@ -166,6 +168,9 @@ class SchoolClassServiceImplementation : SchoolClassService {
         return schoolClass.students
     }
 
-
+    private fun checkTeacherSubjectFitsClassSubject(newClass: SchoolClassInputDTO) {
+        val teacher = teacherRepository.findByIdOrNull(newClass.teacherId)
+        if (teacher?.subject != newClass.subject) throw Exception("Teacher and Class subject do not match")
+    }
 
 }
