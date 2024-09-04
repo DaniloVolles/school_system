@@ -13,5 +13,5 @@ interface SchoolClassService {
     fun createClass(newClass: SchoolClassInputDTO): ResponseEntity<ApiResponseDTO<Any>>
     fun getAllClasses(): ResponseEntity<ApiResponseDTO<Any?>>
     fun insertStudent(studentsIds: InsertStudentSetInClassDTO, classId: Long): ResponseEntity<ApiResponseDTO<Any>>
-    fun inactiveClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>>
+    fun deactivateClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>>
 }

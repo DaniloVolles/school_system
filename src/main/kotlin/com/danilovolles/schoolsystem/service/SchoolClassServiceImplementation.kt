@@ -112,7 +112,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
         }
     }
 
-    override fun inactiveClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
+    override fun deactivateClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
         try {
             val schoolClass = schoolClassRepository
                 .findById(classId)

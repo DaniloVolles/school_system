@@ -17,6 +17,6 @@ data class Teacher(
     var active: Boolean,
 
     @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
-    var schoolClasses: MutableSet<SchoolClass>
+    var schoolClasses: MutableSet<SchoolClass>?
     
 )
