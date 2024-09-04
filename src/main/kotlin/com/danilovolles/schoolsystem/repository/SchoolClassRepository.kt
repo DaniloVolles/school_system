@@ -4,15 +4,14 @@ import com.danilovolles.schoolsystem.entity.SchoolClass
 import com.danilovolles.schoolsystem.entity.Student
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import java.util.UUID
 
 interface SchoolClassRepository : JpaRepository<SchoolClass, Long> {
-    fun getSchoolClassBySubject(subject: String): SchoolClass?
-    fun getSchoolClassByName(name: String): SchoolClass?
-    fun getSchoolClassById(id: Long): SchoolClass?
-    fun getSchoolClassByTeacherId(teacherId: UUID): SchoolClass?
+    fun findSchoolClassBySubject(subject: String): SchoolClass?
+    fun findSchoolClassByName(name: String): SchoolClass?
+    fun findSchoolClassById(id: Long): SchoolClass?
+    fun findSchoolClassByTeacherId(teacherId: UUID): SchoolClass?
 
     @Query(/* value = TODO() */)
-    fun getStudentsBySchoolClass(): Set<Student>?
+    fun findStudentsBySchoolClass(): Set<Student>?
 }

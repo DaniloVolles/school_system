@@ -86,7 +86,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
     @Transactional
     override fun insertStudent(studentsIds: InsertStudentSetInClassDTO, classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
         try {
-            val schoolClass = schoolClassRepository.getSchoolClassById(classId) ?: throw Exception("Class not found")
+            val schoolClass = schoolClassRepository.findSchoolClassById(classId) ?: throw Exception("Class not found")
 
             val currentStudentsNumber = schoolClass.students?.size ?: 0
 
@@ -132,8 +132,8 @@ class SchoolClassServiceImplementation : SchoolClassService {
     }
 
     private fun verifyIfSchoolClassExists(schoolClass: SchoolClassInputDTO): SchoolClass? {
-        val bySubject = schoolClassRepository.getSchoolClassBySubject(schoolClass.subject)
-        val byName = schoolClassRepository.getSchoolClassByName(schoolClass.name)
+        val bySubject = schoolClassRepository.findSchoolClassBySubject(schoolClass.subject)
+        val byName = schoolClassRepository.findSchoolClassByName(schoolClass.name)
 
         if (bySubject != null && byName != null) {
             throw Exception("SchoolClass already in our database")
@@ -162,7 +162,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
     }
 
     private fun findStudentsBySchoolClass(schoolClassId: Long): MutableSet<Student>? {
-        val schoolClass = schoolClassRepository.getSchoolClassById(schoolClassId) ?: throw Exception("Class not found")
+        val schoolClass = schoolClassRepository.findSchoolClassById(schoolClassId) ?: throw Exception("Class not found")
         return schoolClass.students
     }
 
