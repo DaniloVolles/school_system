@@ -13,6 +13,6 @@ interface SchoolClassRepository : JpaRepository<SchoolClass, Long> {
     fun getSchoolClassById(id: Long): SchoolClass?
     fun getSchoolClassByTeacherId(teacherId: UUID): SchoolClass?
 
-    @Query("SELECT students FROM ")
-    fun xpto(@Param("id") Long id): Set<Student>?
+    @Query(/* value = TODO() */)
+    fun getStudentsBySchoolClass(): Set<Student>?
 }
