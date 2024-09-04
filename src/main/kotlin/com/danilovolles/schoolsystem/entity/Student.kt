@@ -18,6 +18,6 @@ data class Student(
     var active: Boolean,
 
     @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
-    var schoolClasses: Set<SchoolClass>? = mutableSetOf(),
+    var schoolClasses: MutableSet<SchoolClass>?
 
 )
