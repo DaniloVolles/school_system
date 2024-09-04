@@ -27,15 +27,15 @@ class UserController {
     fun getAllUsers() = userService.getAllUsers()
 
     @GetMapping("/get/{userId}")
-    fun getUserById(@Valid @PathVariable userId: UUID) = userService.getUserById(userId)
+    fun getUserById(@PathVariable userId: UUID) = userService.getUserById(userId)
 
     @PutMapping("/update/{userId}")
     fun updateUserById(
-        @Valid @PathVariable userId: UUID,
+        @PathVariable userId: UUID,
         @RequestBody userData: UserInputDTO
     ) = userService.updateUser(userId, userData)
 
     @PutMapping("/inactive/{userId}")
-    fun inactiveUserById(@Valid @PathVariable userId: UUID) = userService.deactivateUser(userId)
+    fun inactiveUserById(@PathVariable userId: UUID) = userService.deactivateUser(userId)
 
 }

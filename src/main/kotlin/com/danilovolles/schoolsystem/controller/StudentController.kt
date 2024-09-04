@@ -21,14 +21,14 @@ class StudentController {
     fun getAllStudents() = studentService.getAllStudent()
 
     @GetMapping("/get/{studentId}")
-    fun getStudentById(@Valid @PathVariable studentId: UUID) = studentService.getStudentById(studentId)
+    fun getStudentById(@PathVariable studentId: UUID) = studentService.getStudentById(studentId)
 
     @PutMapping("/update/{studentId}")
     fun updateStudentById(
-        @Valid @PathVariable studentId: UUID,
+        @PathVariable studentId: UUID,
         @RequestBody studentData: StudentInputDTO
     ) = studentService.updateStudent(studentId, studentData)
 
     @PutMapping("/inactive/{studentId}")
-    fun inactiveStudentById(@Valid @PathVariable studentId: UUID) = studentService.deactivateStudent(studentId)
+    fun inactiveStudentById(@PathVariable studentId: UUID) = studentService.deactivateStudent(studentId)
 }

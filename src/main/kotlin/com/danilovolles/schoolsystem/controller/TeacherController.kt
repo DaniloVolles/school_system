@@ -24,17 +24,17 @@ class TeacherController {
     fun getAllTeachers() = teacherService.getAllTeacher()
 
     @GetMapping("/get/{teacherId}")
-    fun getTeacherById(@Valid @PathVariable teacherId: UUID) = teacherService.getTeacherById(teacherId)
+    fun getTeacherById(@PathVariable teacherId: UUID) = teacherService.getTeacherById(teacherId)
 
     @GetMapping("/get/subj/{subjectName}")
     fun getTeacherBySubject(@PathVariable subjectName: String) = teacherService.getTeacherBySubject(subjectName)
 
     @PutMapping("/update/{teacherId}")
     fun updateTeacherById(
-        @Valid @PathVariable teacherId: UUID,
+        @PathVariable teacherId: UUID,
         @RequestBody teacherData: TeacherInputDTO
     ) = teacherService.updateTeacher(teacherId, teacherData)
 
     @PutMapping("/inactive/{teacherId}")
-    fun inactiveTeacherById(@Valid @PathVariable teacherId: UUID) = teacherService.deactivateTeacher(teacherId)
+    fun inactiveTeacherById(@PathVariable teacherId: UUID) = teacherService.deactivateTeacher(teacherId)
 }
