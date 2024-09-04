@@ -36,5 +36,5 @@ class TeacherController {
     ) = teacherService.updateTeacher(teacherId, teacherData)
 
     @PutMapping("/inactive/{teacherId}")
-    fun inactiveTeacherById(@Valid @PathVariable teacherId: UUID) = teacherService.inactiveTeacher(teacherId)
+    fun inactiveTeacherById(@Valid @PathVariable teacherId: UUID) = teacherService.deactivateTeacher(teacherId)
 }

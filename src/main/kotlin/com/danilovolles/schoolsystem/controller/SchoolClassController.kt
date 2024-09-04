@@ -31,7 +31,7 @@ class SchoolClassController {
     fun getAllClasses() = schoolClassService.getAllClasses()
 
     @PutMapping("/inactive/{classId}")
-    fun inactiveClass(@PathVariable classId: Long) = schoolClassService.inactiveClass(classId)
+    fun inactiveClass(@PathVariable classId: Long) = schoolClassService.deactivateClass(classId)
 
     @PutMapping("/insert/student/inclass/{classId}")
     fun insertNewStudents(
