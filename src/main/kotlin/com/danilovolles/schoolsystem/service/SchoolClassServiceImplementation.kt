@@ -92,15 +92,15 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
             val currentStudentsNumber = schoolClass.students?.size ?: 0
 
-            val currentStudentsOther = this.findStudentsBySchoolClass(classId)
-            val studentsToAdd = studentRepository.findAllById(studentsIds.students).toSet()
+            val currentStudents = this.findStudentsBySchoolClass(classId)
+            val studentsToAdd = studentRepository.findAllById(studentsIds.students)
 
             val totalStudentCount = currentStudentsNumber + studentsToAdd.size
 
             if (totalStudentCount > 10) throw Exception("Student count mustn't exceed 10 per class")
 
-            currentStudentsOther?.addAll(studentsToAdd)
-            schoolClass.students = currentStudentsOther
+            currentStudents?.addAll(studentsToAdd)
+            schoolClass.students = currentStudents
 
             schoolClassRepository.save(schoolClass)
 
