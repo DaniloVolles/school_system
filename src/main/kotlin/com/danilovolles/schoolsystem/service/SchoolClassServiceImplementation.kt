@@ -88,7 +88,6 @@ class SchoolClassServiceImplementation : SchoolClassService {
         try {
             val schoolClass = schoolClassRepository.getSchoolClassById(classId) ?: throw Exception("Class not found")
 
-//            val currentStudents = schoolClass.students ?: mutableSetOf()
             val currentStudentsNumber = schoolClass.students?.size ?: 0
 
             val currentStudentsOther = this.findStudentsBySchoolClass(classId)
