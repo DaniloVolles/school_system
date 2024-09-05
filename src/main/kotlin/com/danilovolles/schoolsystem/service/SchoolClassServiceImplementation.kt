@@ -91,11 +91,11 @@ class SchoolClassServiceImplementation : SchoolClassService {
         try {
 
             val schoolClass = findClass(classId)
-            val students = schoolClass.students
-            val allStudents = students?.plus(studentRepository.findAllById(studentsIds.students))
-            this.checkNumberOfStudents(allStudents)
+            val students = mergeStudentsFromClassAndDTO(schoolClass, studentsIds.students)
 
-            schoolClass.students = allStudents as MutableList<Student>?
+            checkNumberOfStudents(students)
+
+            schoolClass.students = students
 
             schoolClassRepository.save(schoolClass)
 
@@ -160,9 +160,10 @@ class SchoolClassServiceImplementation : SchoolClassService {
         }
     }
 
-    private fun findStudentsBySchoolClass(schoolClassId: Long): List<Student>? {
-        val schoolClass = schoolClassRepository.findSchoolClassById(schoolClassId) ?: throw Exception("Class not found")
-        return schoolClass.students
+    private fun mergeStudentsFromClassAndDTO(schoolClass: SchoolClass, newStudentsIds: Set<UUID>): MutableList<Student> {
+        val currentStudents = schoolClass.students ?: mutableListOf()
+        val newStudents = studentRepository.findAllById(newStudentsIds)
+        return (currentStudents + newStudents).toMutableList()
     }
 
     private fun checkTeacherSubjectFitsClassSubject(newClass: SchoolClassInputDTO) {
