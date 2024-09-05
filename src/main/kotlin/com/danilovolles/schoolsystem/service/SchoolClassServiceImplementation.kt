@@ -50,7 +50,8 @@ class SchoolClassServiceImplementation : SchoolClassService {
             schoolClassRepository.save(savingClass)
 
             return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
+                .header("Header Name", "header value 1", "header value 2")
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Class created successfully"))
 
         } catch (e: Exception) {
@@ -88,19 +89,13 @@ class SchoolClassServiceImplementation : SchoolClassService {
     @Transactional
     override fun insertStudent(studentsIds: InsertStudentSetInClassDTO, classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
         try {
-            val schoolClass = schoolClassRepository.findSchoolClassById(classId) ?: throw Exception("Class not found")
 
-            val currentStudentsNumber = schoolClass.students?.size ?: 0
+            val schoolClass = findClass(classId)
+            val students = schoolClass.students
+            val allStudents = students?.plus(studentRepository.findAllById(studentsIds.students))
+            this.checkNumberOfStudents(allStudents)
 
-            val currentStudents = this.findStudentsBySchoolClass(classId)
-            val studentsToAdd = studentRepository.findAllById(studentsIds.students)
-
-            val totalStudentCount = currentStudentsNumber + studentsToAdd.size
-
-            if (totalStudentCount > 10) throw Exception("Student count mustn't exceed 10 per class")
-
-            currentStudents?.addAll(studentsToAdd)
-            schoolClass.students = currentStudents
+            schoolClass.students = allStudents as MutableList<Student>?
 
             schoolClassRepository.save(schoolClass)
 
@@ -116,9 +111,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
     override fun deactivateClass(classId: Long): ResponseEntity<ApiResponseDTO<Any>> {
         try {
-            val schoolClass = schoolClassRepository
-                .findById(classId)
-                .orElseThrow { Exception("Class not found with this ID") }
+            val schoolClass = findClass(classId)
 
             schoolClass.active = false
 
@@ -133,7 +126,11 @@ class SchoolClassServiceImplementation : SchoolClassService {
         }
     }
 
-    private fun verifyIfSchoolClassExists(schoolClass: SchoolClassInputDTO): SchoolClass? {
+    private fun findClass(classId: Long): SchoolClass {
+        return schoolClassRepository.findSchoolClassById(classId) ?: throw Exception("Class not found in Database")
+    }
+
+    private fun verifyIfSchoolClassExists(schoolClass: SchoolClassInputDTO): Unit? {
         val bySubject = schoolClassRepository.findSchoolClassBySubject(schoolClass.subject)
         val byName = schoolClassRepository.findSchoolClassByName(schoolClass.name)
 
@@ -150,20 +147,20 @@ class SchoolClassServiceImplementation : SchoolClassService {
             .orElseThrow { Exception("Teacher not found") }
     }
 
-    private fun findStudentsByIdSet(studentsIds: Set<UUID>?): MutableSet<Student> {
+    private fun findStudentsByIdSet(studentsIds: List<UUID>?): MutableList<Student> {
         if (studentsIds == null) {
             throw Exception("student set is null")
         }
-        return studentRepository.findAllById(studentsIds).toMutableSet()
+        return studentRepository.findAllById(studentsIds)
     }
 
-    private fun checkNumberOfStudents(students: Set<Student>) {
-        if (students.count() > 10) {
+    private fun checkNumberOfStudents(students: List<Student>?) {
+        if (students != null && students.count() > 10) {
             throw Exception("Classes must not have more than 10 students")
         }
     }
 
-    private fun findStudentsBySchoolClass(schoolClassId: Long): MutableSet<Student>? {
+    private fun findStudentsBySchoolClass(schoolClassId: Long): List<Student>? {
         val schoolClass = schoolClassRepository.findSchoolClassById(schoolClassId) ?: throw Exception("Class not found")
         return schoolClass.students
     }

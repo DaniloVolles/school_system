@@ -1,7 +1,6 @@
 package com.danilovolles.schoolsystem.entity
 
 import jakarta.persistence.*
-import java.util.UUID
 
 @Entity
 @Table(name = "tb_schoolclasses")
@@ -25,6 +24,6 @@ data class SchoolClass (
         joinColumns = [JoinColumn(name = "schoolclass_id")],
         inverseJoinColumns = [JoinColumn(name = "student_id")]
     )
-    var students: MutableSet<Student>? = mutableSetOf()
+    var students: MutableList<Student>?
 
 )
