@@ -51,7 +51,6 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
             return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header("Header Name", "header value 1", "header value 2")
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Class created successfully"))
 
         } catch (e: Exception) {
@@ -67,10 +66,18 @@ class SchoolClassServiceImplementation : SchoolClassService {
             val classesList: MutableList<SchoolClassOutputDTO> = mutableListOf()
 
             for (schoolClass in classes) {
+                val teacher = schoolClass.teacher
+                val teacherOutput = TeacherOutputDTO(
+                    name = teacher?.name ?: "null",
+                    subject = teacher?.subject ?: "null",
+                    email = teacher?.email ?: "null",
+                    active = teacher?.active ?: false
+                )
+
                 val classOutput = SchoolClassOutputDTO(
                     subject = schoolClass.subject,
                     name = schoolClass.name,
-                    teacher = schoolClass.teacher,
+                    teacher = teacherOutput,
                     description = schoolClass.description
                 )
                 classesList.add(classOutput)
