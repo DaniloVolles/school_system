@@ -6,6 +6,8 @@ import com.danilovolles.schoolsystem.dto.UserInputDTO
 import com.danilovolles.schoolsystem.dto.UserOutputDTO
 import com.danilovolles.schoolsystem.entity.User
 import com.danilovolles.schoolsystem.exception.UserAlreadyExistsException
+import com.danilovolles.schoolsystem.exception.UserNotFoundException
+import com.danilovolles.schoolsystem.exception.UserServiceLogicException
 import com.danilovolles.schoolsystem.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -41,7 +43,7 @@ class UserServiceImplementation : UserService {
             throw UserAlreadyExistsException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw UserServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -60,7 +62,7 @@ class UserServiceImplementation : UserService {
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, userList))
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw UserServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -77,10 +79,13 @@ class UserServiceImplementation : UserService {
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, userOutput))
 
+        } catch (e: UserNotFoundException) {
+            throw UserNotFoundException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw UserServiceLogicException(e.localizedMessage)
         }
+
     }
 
     override fun updateUser(userId: UUID, userUpdate: UserInputDTO): ResponseEntity<ApiResponseDTO<Any>> {
@@ -97,9 +102,11 @@ class UserServiceImplementation : UserService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User updated successfully"))
+        } catch (e: UserNotFoundException) {
+            throw UserNotFoundException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw UserServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -116,9 +123,12 @@ class UserServiceImplementation : UserService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User inactivated successfully"))
+
+        } catch (e: UserNotFoundException) {
+            throw UserNotFoundException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw UserServiceLogicException(e.localizedMessage)
         }
     }
 

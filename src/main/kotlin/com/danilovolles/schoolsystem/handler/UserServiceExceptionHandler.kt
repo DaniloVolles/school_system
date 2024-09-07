@@ -35,7 +35,7 @@ class UserServiceExceptionHandler {
             .body(ApiResponseDTO(ApiResponseStatus.FAIL.name, exception))
     }
 
-    @ExceptionHandler(value = [MethodArgumentNotValidException::class])
+    @ExceptionHandler(MethodArgumentNotValidException::class)
     fun methodArgumentNotValidExceptionHandler(exception: MethodArgumentNotValidException): ResponseEntity<ApiResponseDTO<*>> {
         val errorMessage = exception
             .bindingResult
