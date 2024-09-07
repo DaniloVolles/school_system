@@ -2,6 +2,7 @@ package com.danilovolles.schoolsystem.service
 
 import com.danilovolles.schoolsystem.dto.*
 import com.danilovolles.schoolsystem.entity.Student
+import com.danilovolles.schoolsystem.exception.*
 import com.danilovolles.schoolsystem.repository.StudentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -35,9 +36,13 @@ class StudentServiceImplementation : StudentService {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "New student created successfully"))
 
-        } catch (e: Exception) {
+        } catch (e: StudentNotFoundException){
             e.stackTrace
-            throw Exception(e.message)
+            throw StudentNotFoundException(e.localizedMessage)
+
+        } catch (e: Exception){
+            e.stackTrace
+            throw StudentServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -60,7 +65,7 @@ class StudentServiceImplementation : StudentService {
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, studentList))
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -69,7 +74,7 @@ class StudentServiceImplementation : StudentService {
 
             val student = studentRepository
                 .findById(studentId)
-                .orElseThrow { RuntimeException("Student not found in our database") }
+                .orElseThrow { StudentNotFoundException("Student not found in our database") }
 
             val studentOutput = studentToStudentOutput(student)
 
@@ -77,9 +82,13 @@ class StudentServiceImplementation : StudentService {
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, studentOutput))
 
+        } catch (e: StudentNotFoundException) {
+            e.stackTrace
+            throw StudentNotFoundException(e.localizedMessage)
+
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw StudentServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -97,9 +106,14 @@ class StudentServiceImplementation : StudentService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Student updated successfully"))
+
+        } catch (e: StudentNotFoundException){
+            e.stackTrace
+            throw StudentNotFoundException(e.localizedMessage)
+
         } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw StudentServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -116,9 +130,14 @@ class StudentServiceImplementation : StudentService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Student inactivated successfully"))
+
+        } catch (e: StudentNotFoundException){
+            e.stackTrace
+            throw StudentNotFoundException(e.localizedMessage)
+
         } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw StudentServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -136,7 +155,7 @@ class StudentServiceImplementation : StudentService {
     private fun verifyStudentExists(studentDto: StudentInputDTO): Student? {
         val student = studentRepository.findStudentByName(studentDto.name)
         if (student != null) {
-            throw Exception("Student already in our database")
+            throw StudentAlreadyExistsException("Student already in our database")
         }
         return null
     }
