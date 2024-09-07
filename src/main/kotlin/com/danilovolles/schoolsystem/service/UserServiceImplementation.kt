@@ -5,6 +5,7 @@ import com.danilovolles.schoolsystem.dto.ApiResponseStatus
 import com.danilovolles.schoolsystem.dto.UserInputDTO
 import com.danilovolles.schoolsystem.dto.UserOutputDTO
 import com.danilovolles.schoolsystem.entity.User
+import com.danilovolles.schoolsystem.exception.UserAlreadyExistsException
 import com.danilovolles.schoolsystem.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -36,6 +37,8 @@ class UserServiceImplementation : UserService {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "New user created successfully"))
 
+        } catch (e: UserAlreadyExistsException) {
+            throw UserAlreadyExistsException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
             throw Exception(e.message)
@@ -94,7 +97,7 @@ class UserServiceImplementation : UserService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User updated successfully"))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.stackTrace
             throw Exception(e.message)
         }
@@ -113,18 +116,18 @@ class UserServiceImplementation : UserService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "User inactivated successfully"))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.stackTrace
             throw Exception(e.message)
         }
     }
 
-    private fun userToUserOutput(name: String, email: String) = UserOutputDTO(name = name, email= email)
+    private fun userToUserOutput(name: String, email: String) = UserOutputDTO(name = name, email = email)
 
     private fun verifyUserExists(userDto: UserInputDTO): User? {
         val user = userRepository.findUserByEmail(userDto.email)
         if (user != null) {
-            throw Exception("User already in our database")
+            throw UserAlreadyExistsException("User already in our database")
         }
         return null
     }
