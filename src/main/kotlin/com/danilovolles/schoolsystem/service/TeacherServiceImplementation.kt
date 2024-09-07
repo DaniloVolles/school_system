@@ -2,6 +2,10 @@ package com.danilovolles.schoolsystem.service
 
 import com.danilovolles.schoolsystem.dto.*
 import com.danilovolles.schoolsystem.entity.Teacher
+import com.danilovolles.schoolsystem.exception.TeacherAlreadyExistsException
+import com.danilovolles.schoolsystem.exception.TeacherNotFoundException
+import com.danilovolles.schoolsystem.exception.TeacherServiceLogicException
+import com.danilovolles.schoolsystem.exception.UserServiceLogicException
 import com.danilovolles.schoolsystem.repository.TeacherRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -36,9 +40,11 @@ class TeacherServiceImplementation : TeacherService {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "New teacher created successfully"))
 
+        } catch (e: TeacherAlreadyExistsException) {
+            throw TeacherAlreadyExistsException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -64,7 +70,7 @@ class TeacherServiceImplementation : TeacherService {
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, teacherList))
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -81,16 +87,20 @@ class TeacherServiceImplementation : TeacherService {
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, teacherOutput))
 
+        } catch (e: TeacherNotFoundException) {
+            e.stackTrace
+            throw TeacherNotFoundException(e.localizedMessage)
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
     override fun getTeacherBySubject(subject: String): ResponseEntity<ApiResponseDTO<Any>> {
         try {
 
-            val teacher = teacherRepository.findTeacherBySubject(subject) ?: throw Exception("Teacher not found in our database")
+            val teacher = teacherRepository.findTeacherBySubject(subject)
+                ?: throw TeacherNotFoundException("Teacher not found in our database")
 
             val teacherOutput = teacherToTeacherOutput(teacher)
 
@@ -98,9 +108,13 @@ class TeacherServiceImplementation : TeacherService {
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, teacherOutput))
 
+        } catch (e: TeacherNotFoundException) {
+            e.stackTrace
+            throw TeacherNotFoundException(e.localizedMessage)
+
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -108,7 +122,7 @@ class TeacherServiceImplementation : TeacherService {
         try {
             val teacher = teacherRepository
                 .findById(teacherId)
-                .orElseThrow { RuntimeException("Teacher not found in our database") }
+                .orElseThrow { TeacherNotFoundException("Teacher not found in our database") }
 
             teacher.name = teacherUpdate.name
             teacher.email = teacherUpdate.email
@@ -119,9 +133,14 @@ class TeacherServiceImplementation : TeacherService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Teacher updated successfully"))
+
+        } catch (e: TeacherNotFoundException){
+            e.stackTrace
+            throw TeacherNotFoundException(e.localizedMessage)
+
         } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -130,7 +149,7 @@ class TeacherServiceImplementation : TeacherService {
 
             val teacher = teacherRepository
                 .findById(teacherId)
-                .orElseThrow { RuntimeException("Teacher not found in our database") }
+                .orElseThrow { TeacherNotFoundException("Teacher not found in our database") }
             teacher.active = false
 
             teacherRepository.save(teacher)
@@ -138,9 +157,14 @@ class TeacherServiceImplementation : TeacherService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Teacher inactivated successfully"))
+
+        } catch (e: TeacherNotFoundException){
+            e.stackTrace
+            throw TeacherNotFoundException(e.localizedMessage)
+
         } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw TeacherServiceLogicException(e.localizedMessage)
         }
     }
 
