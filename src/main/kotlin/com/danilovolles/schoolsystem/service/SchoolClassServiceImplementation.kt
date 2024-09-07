@@ -4,6 +4,7 @@ import com.danilovolles.schoolsystem.dto.*
 import com.danilovolles.schoolsystem.entity.SchoolClass
 import com.danilovolles.schoolsystem.entity.Student
 import com.danilovolles.schoolsystem.entity.Teacher
+import com.danilovolles.schoolsystem.exception.*
 import com.danilovolles.schoolsystem.repository.SchoolClassRepository
 import com.danilovolles.schoolsystem.repository.StudentRepository
 import com.danilovolles.schoolsystem.repository.TeacherRepository
@@ -53,9 +54,12 @@ class SchoolClassServiceImplementation : SchoolClassService {
                 .status(HttpStatus.CREATED)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Class created successfully"))
 
-        } catch (e: Exception) {
+        } catch (e: SchoolClassAlreadyExistsException){
+            throw SchoolClassAlreadyExistsException(e.localizedMessage)
+
+        } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw SchoolClassServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -89,7 +93,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
         } catch (e: Exception) {
             e.stackTrace
-            throw Exception(e.message)
+            throw SchoolClassServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -110,9 +114,15 @@ class SchoolClassServiceImplementation : SchoolClassService {
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Students added successfully"))
 
-        } catch (e: Exception) {
+        } catch (e: SchoolClassNotFoundException){
+            throw SchoolClassNotFoundException(e.localizedMessage)
+
+        } catch (e: StudentNotFoundException){
+            throw StudentNotFoundException(e.localizedMessage)
+
+        } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw SchoolClassServiceLogicException(e.localizedMessage)
         }
     }
 
@@ -127,14 +137,19 @@ class SchoolClassServiceImplementation : SchoolClassService {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponseDTO(ApiResponseStatus.SUCCESS.name, "Class inactivated successfully"))
-        } catch (e: Exception) {
+
+        } catch (e: SchoolClassNotFoundException){
+            throw SchoolClassNotFoundException(e.localizedMessage)
+
+        } catch (e: Exception){
             e.stackTrace
-            throw Exception(e.message)
+            throw SchoolClassServiceLogicException(e.localizedMessage)
         }
     }
 
     private fun findClass(classId: Long): SchoolClass {
-        return schoolClassRepository.findSchoolClassById(classId) ?: throw Exception("Class not found in Database")
+        return schoolClassRepository.findSchoolClassById(classId)
+            ?: throw SchoolClassNotFoundException("Class not found in Database")
     }
 
     private fun verifyIfSchoolClassExists(schoolClass: SchoolClassInputDTO): Unit? {
@@ -142,7 +157,7 @@ class SchoolClassServiceImplementation : SchoolClassService {
         val byName = schoolClassRepository.findSchoolClassByName(schoolClass.name)
 
         if (bySubject != null && byName != null) {
-            throw Exception("SchoolClass already in our database")
+            throw SchoolClassAlreadyExistsException("SchoolClass already in our database")
         }
 
         return null
@@ -151,19 +166,19 @@ class SchoolClassServiceImplementation : SchoolClassService {
     private fun findTeacherById(teacherId: UUID): Teacher? {
         return teacherRepository
             .findById(teacherId)
-            .orElseThrow { Exception("Teacher not found") }
+            .orElseThrow { TeacherNotFoundException("Teacher not found") }
     }
 
     private fun findStudentsByIdSet(studentsIds: List<UUID>?): MutableList<Student> {
         if (studentsIds == null) {
-            throw Exception("student set is null")
+            throw StudentNotFoundException("student set is null")
         }
         return studentRepository.findAllById(studentsIds)
     }
 
     private fun checkNumberOfStudents(students: List<Student>?) {
         if (students != null && students.count() > 10) {
-            throw Exception("Classes must not have more than 10 students")
+            throw SchoolClassServiceLogicException("Classes must not have more than 10 students")
         }
     }
 
@@ -175,7 +190,9 @@ class SchoolClassServiceImplementation : SchoolClassService {
 
     private fun checkTeacherSubjectFitsClassSubject(newClass: SchoolClassInputDTO) {
         val teacher = teacherRepository.findByIdOrNull(newClass.teacherId)
-        if (teacher?.subject != newClass.subject) throw Exception("Teacher and Class subject do not match")
+        if (teacher?.subject != newClass.subject) {
+            throw SchoolClassServiceLogicException("Teacher and Class subject do not match")
+        }
     }
 
 }
