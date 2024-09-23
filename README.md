@@ -1,3 +1,5 @@
+![Image](sistema-de-gestão-escolar.png "Sistema de Gestão Escolar")
+
 # School System
 Esse sistema foi desenvolvido na intenção de implementar alguns tópicos mais profundos do Spring
 
